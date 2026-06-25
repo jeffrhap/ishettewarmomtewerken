@@ -55,30 +55,75 @@ export const coolLines = [
   "Niemand gaat geloven dat dit te warm is. Stop met rekken, pak die muis en ga ervoor.",
 ] as const;
 
-export const STATES = {
+// Icon names map to lucide-react components in the client component (answer.tsx).
+// We store names — not component refs — because STATES crosses the
+// server→client boundary as a prop, and only serializable data can.
+export type IconName =
+  | "sun"
+  | "cloudSun"
+  | "flame"
+  | "circleCheck"
+  | "iceCream"
+  | "treePalm"
+  | "cupSoda"
+  | "snowflake"
+  | "coffee"
+  | "laptop"
+  | "wind"
+  | "footprints"
+  | "thermometer";
+
+type Chip = { icon: IconName; label: string };
+
+export type Content = {
+  markIcon: IconName;
+  badgeIcon: IconName;
+  badge: string;
+  badgeColor: string;
+  verdict: string;
+  headline: string;
+  chips: Chip[];
+  taglineIcon: IconName;
+  tagline: string;
+  lines: readonly string[];
+};
+
+export const STATES: Record<"warm" | "cool", Content> = {
   warm: {
-    mark: "☀️",
-    badge: "🔥 WERKWEER: TE HEET",
+    markIcon: "sun",
+    badgeIcon: "flame",
+    badge: "WERKWEER: TE HEET",
     badgeColor: "#E53600",
     verdict: "JA.",
     headline: "Het is te warm om te werken.",
-    chips: ["🍦 IJsje", "🌳 Schaduw", "🥤 Koud drankje", "❄️ Airco"],
-    tagline: "Niet wetenschappelijk. Wel waar. 🌡️",
+    chips: [
+      { icon: "iceCream", label: "IJsje" },
+      { icon: "treePalm", label: "Schaduw" },
+      { icon: "cupSoda", label: "Koud drankje" },
+      { icon: "snowflake", label: "Airco" },
+    ],
+    taglineIcon: "thermometer",
+    tagline: "Niet wetenschappelijk. Wel waar.",
     lines: warmLines,
   },
   cool: {
-    mark: "🌤️",
-    badge: "✅ WERKWEER: PRIMA",
+    markIcon: "cloudSun",
+    badgeIcon: "circleCheck",
+    badge: "WERKWEER: PRIMA",
     badgeColor: "#0E8A45",
     verdict: "NEE",
     headline: "Het is niet te warm om te werken.",
-    chips: ["☕ Koffie", "💻 Aan de slag", "🪟 Raam open", "🚶 Pauzewandeling"],
-    tagline: "Geen excuus. Wel koffie. ☕",
+    chips: [
+      { icon: "coffee", label: "Koffie" },
+      { icon: "laptop", label: "Aan de slag" },
+      { icon: "wind", label: "Raam open" },
+      { icon: "footprints", label: "Pauzewandeling" },
+    ],
+    taglineIcon: "coffee",
+    tagline: "Geen excuus. Wel koffie.",
     lines: coolLines,
   },
-} as const;
-
-export type Content = (typeof STATES)[keyof typeof STATES];
+};
 
 export type Weather = {
   temperature: number;

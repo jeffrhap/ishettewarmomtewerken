@@ -1,10 +1,48 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import {
+  CircleCheck,
+  CloudSun,
+  Coffee,
+  CupSoda,
+  Dices,
+  Flame,
+  Footprints,
+  IceCream,
+  Laptop,
+  type LucideIcon,
+  Snowflake,
+  Sun,
+  Thermometer as ThermometerIcon,
+  TreePalm,
+  Wind,
+} from "lucide-react";
 import { Thermometer } from "@/components/thermometer";
-import type { Content, Weather } from "@/lib/answers";
+import type { Content, IconName, Weather } from "@/lib/answers";
 
 const KOFI_URL = "https://ko-fi.com/jeffreyh91";
+
+// Resolve the serializable icon names from STATES to lucide components.
+const ICONS: Record<IconName, LucideIcon> = {
+  sun: Sun,
+  cloudSun: CloudSun,
+  flame: Flame,
+  circleCheck: CircleCheck,
+  iceCream: IceCream,
+  treePalm: TreePalm,
+  cupSoda: CupSoda,
+  snowflake: Snowflake,
+  coffee: Coffee,
+  laptop: Laptop,
+  wind: Wind,
+  footprints: Footprints,
+  thermometer: ThermometerIcon,
+};
+
+// One shared treatment for every small caption (status, kicker, stat labels)
+// so the micro-typography stays consistent across the page.
+const eyebrow = "text-xs font-semibold uppercase tracking-[0.18em] text-white/70";
 
 type Props = {
   weather: Weather | null;
@@ -29,7 +67,7 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
   if (!weather || line === null) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-800 p-8 text-center font-body text-slate-100">
-        <h1 className="text-5xl font-black">¯\_(ツ)_/¯</h1>
+        <h1 className="font-display text-5xl font-extrabold tracking-tight">¯\_(ツ)_/¯</h1>
         <p className="text-xl">
           Kon de temperatuur even niet ophalen. Probeer het zo nog eens.
         </p>
@@ -42,6 +80,10 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
     { value: `${round(weather.feelsLike)}°C`, label: "Gevoelstemperatuur" },
     { value: `${round(weather.maxTemp)}°C`, label: "Max vandaag" },
   ];
+
+  const MarkIcon = ICONS[content.markIcon];
+  const BadgeIcon = ICONS[content.badgeIcon];
+  const TaglineIcon = ICONS[content.taglineIcon];
 
   return (
     <main
@@ -56,16 +98,14 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
         {/* Status bar */}
         <header className="flex items-center justify-between border-b border-white/20 py-4 lg:py-5">
           <div className="flex items-center gap-2">
-            <span className="text-lg">{content.mark}</span>
+            <MarkIcon className="h-5 w-5 shrink-0" />
             <span className="font-bold tracking-[0.2px]">
               ishettewarmomtewerken.nl
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-white" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
-              Vandaag {weather.time} · De Bilt
-            </span>
+            <span className={eyebrow}>Vandaag {weather.time} · De Bilt</span>
           </div>
         </header>
 
@@ -75,23 +115,28 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
           <section className="flex flex-1 flex-col gap-6">
             <div className="flex flex-col gap-6">
               <span
-                className="w-fit rounded-full bg-white px-4 py-2 text-sm font-bold tracking-wider"
+                className="flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold tracking-wider"
                 style={{ color: content.badgeColor }}
               >
+                <BadgeIcon className="h-4 w-4" />
                 {content.badge}
               </span>
 
               <div className="flex flex-col gap-3">
-                <p className="text-xs font-bold tracking-[2px] text-white/70">
-                  HET OORDEEL · VANDAAG
-                </p>
-                <h1 className="font-display text-7xl font-extrabold leading-none sm:text-8xl lg:text-[110px]">
-                  {content.verdict}
+                <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+                  Is het te warm om te werken?
                 </h1>
-                <h2 className="font-display text-2xl font-bold sm:text-3xl">
+                <p className={`flex items-center gap-2.5 ${eyebrow}`}>
+                  <span className="h-px w-6 bg-white/40" />
+                  Het oordeel · Vandaag
+                </p>
+                <p className="font-display text-7xl font-extrabold leading-none tracking-tight sm:text-8xl lg:text-[110px]">
+                  {content.verdict}
+                </p>
+                <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                   {content.headline}
                 </h2>
-                <p className="max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+                <p className="max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
                   {line}
                 </p>
               </div>
@@ -105,26 +150,28 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
                       <div className="hidden h-[42px] w-px bg-white/20 sm:block" />
                     )}
                     <div className="flex flex-col gap-1">
-                      <span className="font-display text-3xl font-extrabold">
+                      <span className="font-display text-3xl font-extrabold tracking-tight">
                         {stat.value}
                       </span>
-                      <span className="text-xs font-semibold tracking-wide text-white/70">
-                        {stat.label}
-                      </span>
+                      <span className={eyebrow}>{stat.label}</span>
                     </div>
                   </Fragment>
                 ))}
               </div>
 
               <div className="flex flex-wrap gap-2.5">
-                {content.chips.map((chip) => (
-                  <span
-                    key={chip}
-                    className="rounded-full border border-white/40 bg-white/15 px-4 py-2 text-sm font-medium"
-                  >
-                    {chip}
-                  </span>
-                ))}
+                {content.chips.map(({ icon, label }) => {
+                  const Icon = ICONS[icon];
+                  return (
+                    <span
+                      key={label}
+                      className="flex items-center gap-2 rounded-full border border-white/40 bg-white/15 px-4 py-2 text-sm font-medium"
+                    >
+                      <Icon className="h-4 w-4" />
+                      {label}
+                    </span>
+                  );
+                })}
               </div>
             </div>
 
@@ -133,7 +180,8 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
               onClick={() => setLine(pick(content.lines, line))}
               className="mt-2 flex w-fit items-center gap-2 rounded-full border-[1.5px] border-white/40 bg-white/15 px-6 py-3.5 text-base font-semibold transition hover:bg-white/25 lg:mt-auto"
             >
-              nog een keer 🎲
+              nog een keer
+              <Dices className="h-5 w-5" />
             </button>
           </section>
 
@@ -152,14 +200,17 @@ export const Answer = ({ weather, isWarm, content, initialLine }: Props) => {
           <span className="text-xs font-medium text-white/70">
             Bron: Open-Meteo · meetstation De Bilt
           </span>
-          <span className="text-xs font-medium text-white/70">{content.tagline}</span>
+          <span className="flex items-center gap-1.5 text-xs font-medium text-white/70">
+            <TaglineIcon className="h-3.5 w-3.5" />
+            {content.tagline}
+          </span>
           <a
             href={KOFI_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#FF5E5B] transition hover:-translate-y-0.5"
           >
-            <span>🍦</span> Trakteer me op een ijsje
+            <IceCream className="h-4 w-4" /> Trakteer me op een ijsje
           </a>
         </footer>
       </div>

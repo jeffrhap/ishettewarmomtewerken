@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { Flame, Snowflake } from "lucide-react";
 
 type Props = { temperature: number; isWarm: boolean };
 
@@ -133,7 +134,7 @@ export const Thermometer = ({ temperature, isWarm }: Props) => {
 
       {/* Current temperature callout */}
       <div
-        className="absolute text-right font-display text-[46px] font-extrabold leading-[46px] text-white"
+        className="absolute text-right font-display text-[46px] font-extrabold leading-[46px] tracking-tight text-white"
         style={{ left: 5, top: liquidTop - 25, width: 88 }}
       >
         {Math.round(temperature)}°
@@ -153,7 +154,11 @@ export const Thermometer = ({ temperature, isWarm }: Props) => {
         <span className="font-body text-[12px] font-bold tracking-wider text-white">
           {isWarm ? "TE HEET" : "PRIMA"}
         </span>
-        <span className="text-[12px]">{isWarm ? "🔥" : "🧊"}</span>
+        {isWarm ? (
+          <Flame className="h-3.5 w-3.5 text-white" />
+        ) : (
+          <Snowflake className="h-3.5 w-3.5 text-white" />
+        )}
       </div>
     </div>
   );
