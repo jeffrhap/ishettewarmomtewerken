@@ -56,7 +56,7 @@ export const coolLines = [
 ] as const;
 
 // Icon names map to lucide-react components in the client component (answer.tsx).
-// We store names — not component refs — because STATES crosses the
+// We store names (not component refs) because STATES crosses the
 // server→client boundary as a prop, and only serializable data can.
 export type IconName =
   | "sun"
