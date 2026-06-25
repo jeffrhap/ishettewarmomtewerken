@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -12,10 +12,34 @@ const archivo = Archivo({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://ishettewarmomtewerken.nl";
+const TITLE = "Is het te warm om te werken?";
+const DESCRIPTION =
+  "Het antwoord op de enige vraag die ertoe doet, op basis van de temperatuur in Nederland.";
+
 export const metadata: Metadata = {
-  title: "Is het te warm om te werken?",
-  description:
-    "Het antwoord op de enige vraag die ertoe doet, op basis van de temperatuur in Nederland.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  // og:image / twitter:image are injected automatically from opengraph-image.tsx.
+  openGraph: {
+    type: "website",
+    locale: "nl_NL",
+    url: "/",
+    siteName: TITLE,
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#E53600",
 };
 
 export default function RootLayout({

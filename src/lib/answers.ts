@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 // De Bilt = the national reference station, used as a stand-in for
 // "the average Netherlands" so we never need the visitor's location.
 export const DE_BILT = { latitude: 52.1, longitude: 5.18 } as const;
@@ -66,11 +68,12 @@ export const pickRandom = <T,>(items: readonly T[]): T =>
 
 // Current weather for De Bilt via Open-Meteo (free, no API key).
 // Returns null on failure so the UI can degrade gracefully.
-export const getWeather = async (): Promise<Weather | null> => {
+// Wrapped in cache() so the page render and generateMetadata share one call.
+export const getWeather = cache(async (): Promise<Weather | null> => {
   try {
     const res = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${DE_BILT.latitude}&longitude=${DE_BILT.longitude}&current=temperature_2m,apparent_temperature&daily=temperature_2m_max&timezone=Europe%2FAmsterdam&forecast_days=1`,
-      { next: { revalidate: 600 } },
+      { next: { revalidate: 300 } },
     );
     if (!res.ok) return null;
     const data = await res.json();
@@ -91,4 +94,4 @@ export const getWeather = async (): Promise<Weather | null> => {
   } catch {
     return null;
   }
-};
+});
