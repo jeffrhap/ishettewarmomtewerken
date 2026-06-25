@@ -15,10 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const isWarm = weather.temperature >= TEMP_THRESHOLD;
   const temp = Math.round(weather.temperature);
   const title = isWarm
-    ? "JA — het is te warm om te werken 🔥"
-    : "NEE — gewoon werken vandaag ☕";
+    ? "JA, het is te warm om te werken"
+    : "NEE, gewoon werken vandaag";
   const description = isWarm
-    ? `Het is ${temp}°C in De Bilt. Officieel te warm om te werken — klap die laptop dicht.`
+    ? `Het is ${temp}°C in De Bilt. Officieel te warm om te werken. Klap die laptop dicht.`
     : `Het is ${temp}°C in De Bilt. Niet te warm, dus geen excuus. Aan de slag.`;
 
   return {

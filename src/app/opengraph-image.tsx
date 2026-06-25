@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { getWeather, TEMP_THRESHOLD } from "@/lib/answers";
 
 export const alt =
-  "Is het te warm om te werken? — het dagelijkse oordeel op basis van de temperatuur in Nederland.";
+  "Is het te warm om te werken? Het dagelijkse oordeel op basis van de temperatuur in Nederland.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 300;
